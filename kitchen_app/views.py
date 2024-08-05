@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from kitchen_app.models import Food, Category, Recipe, Step
 from kitchen_app.serializers import FoodSerializer, CategorySerializer, RecipeSerializer, StepSerializer
@@ -7,9 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 # Create your views here.
-
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
@@ -57,7 +53,6 @@ def get_recipe_by_category(request, pk):
         serializer = RecipeSerializer(recipes, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))

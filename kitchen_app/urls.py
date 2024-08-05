@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
     #Food urls
     path("foods/", views.fetch_foods, name="foods"),
     #------------------------------------------------
