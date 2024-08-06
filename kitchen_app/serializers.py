@@ -21,7 +21,11 @@ class StepSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = FoodSerializer(many= True, read_only=True)
     steps = StepSerializer(many= True, read_only=True)
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ['name', 'category','image', 'ingredients', 'steps']
+        fields = ['name', 'category','image_url', 'ingredients', 'steps']
+    
+    def get_image_url(self, obj):
+        return obj.image.url if obj.image else None
 

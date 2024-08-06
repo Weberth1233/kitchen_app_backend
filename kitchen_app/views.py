@@ -54,6 +54,15 @@ def get_recipe_by_category(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(['POST'])
+@permission_classes((permissions.AllowAny,))
+def get_recipes_by_filter_categorys(request):
+    if request.method == 'POST':
+        categorys = request.data.get("categorys")
+        recipes_filter = Recipe.get_recipes_by_filter_categorys(categorys)
+        serializer = RecipeSerializer(recipes_filter, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
 def fetch_steps(request):

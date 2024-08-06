@@ -26,6 +26,9 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to='recipes/', null=True, blank=True)
     ingredients = models.ManyToManyField(Food, related_name='recipe')
     steps = models.ManyToManyField(Step, related_name='steps_recipe')
+    
+    def get_image_url(self):
+        return self.image.url if self.image else None
 
     def get_ordered_steps(self):
         return self.steps.order_by('number_step')
@@ -37,8 +40,16 @@ class Recipe(models.Model):
             if(recipe.category.id == id_category):    
                 recipes_by_category.append(recipe)
         return recipes_by_category
-                
-            
+    
+    def get_recipes_by_filter_categorys(categorys_id = []):
+        recipe_filter_category = []
+        recipes = Recipe.objects.all()
+        for recipe in recipes: 
+            for id in categorys_id:
+                if recipe.category.id == id:
+                    recipe_filter_category.append(recipe)
+        return recipe_filter_category
+                     
     #get recipes by parameters
     def filter_recipes_by_parameters(id=None,**kwargs):
         try:
