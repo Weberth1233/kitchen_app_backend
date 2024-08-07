@@ -10,7 +10,7 @@ class FoodSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['id', 'name']
 
 class StepSerializer(serializers.ModelSerializer):
     # ingredients = StepSerializer(many= True, read_only=True)
@@ -21,10 +21,12 @@ class StepSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = FoodSerializer(many= True, read_only=True)
     steps = StepSerializer(many= True, read_only=True)
+    category = CategorySerializer()
+
     image_url = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ['name', 'category','image_url', 'ingredients', 'steps']
+        fields = ['name', 'category','image_url','time_to_prepare', 'ingredients', 'steps']
     
     def get_image_url(self, obj):
         return obj.image.url if obj.image else None

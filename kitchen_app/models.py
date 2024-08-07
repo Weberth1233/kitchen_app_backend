@@ -26,7 +26,8 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to='recipes/', null=True, blank=True)
     ingredients = models.ManyToManyField(Food, related_name='recipe')
     steps = models.ManyToManyField(Step, related_name='steps_recipe')
-    
+    time_to_prepare = models.IntegerField()
+
     def get_image_url(self):
         return self.image.url if self.image else None
 
