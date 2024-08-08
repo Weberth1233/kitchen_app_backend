@@ -26,7 +26,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ['name', 'category','image_url','time_to_prepare', 'ingredients', 'steps']
+        fields = ['id', 'name', 'category','image_url','time_to_prepare', 'ingredients', 'steps','created_at']
     
     def get_image_url(self, obj):
         return obj.image.url if obj.image else None

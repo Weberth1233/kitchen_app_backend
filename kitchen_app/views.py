@@ -5,8 +5,10 @@ from kitchen_app.serializers import FoodSerializer, CategorySerializer, RecipeSe
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
+from django.core.paginator import Paginator
 # Create your views here.
 
+#---------------------------------Foods -------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
 def fetch_foods(request):
@@ -16,6 +18,7 @@ def fetch_foods(request):
         return Response(serializer.data, status = status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+#--------------------------------- Categorys -------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
 def fetch_categorys(request):
@@ -25,6 +28,7 @@ def fetch_categorys(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+#---------------------------------Recipes -------------------------------------------------------------
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
 def fetch_recipes(request):
@@ -33,6 +37,39 @@ def fetch_recipes(request):
         serializer = RecipeSerializer(recipes, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+@permission_classes((permissions.AllowAny,))
+def filter_recipes_by_name(request):
+    try:
+        if request.method == 'POST':
+            name = request.data.get("name")
+            page_number = request.data.get("page")
+            recipes = Recipe.filter_recipes_by_name(name=name)
+            page_obj = Recipe.pagination(page_number=page_number, list=recipes)
+            serializer = RecipeSerializer(page_obj, many = True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"error_request": "Requisição incorreta - Use o método POST."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    except Exception as error: 
+            raise Exception(f'Error! - {error}')
+
+@api_view(['POST'])
+@permission_classes((permissions.AllowAny,))
+def fetch_recipe_pagination(request):
+    if request.method == 'POST':
+        recipes = Recipe.objects.all().order_by('id')
+        page_obj = Recipe.pagination(page_number=request.data.get("page"), list=recipes)
+        serializer = RecipeSerializer(page_obj, many = True)
+        return Response(serializer.data)
+    return Response({"error_request": "Requisição incorreta - Use o método POST."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+@permission_classes((permissions.AllowAny,))
+def fetch_recently_recipe_pagination(request):
+    recipes = Recipe.recently_recipes()
+    page_obj = Recipe.pagination(page_number=request.data.get("page"), list=recipes)
+    serializer = RecipeSerializer(page_obj, many = True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
@@ -63,6 +100,7 @@ def get_recipes_by_filter_categorys(request):
         serializer = RecipeSerializer(recipes_filter, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+#-------------------------------Steps -------------------------------------
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
 def fetch_steps(request):
