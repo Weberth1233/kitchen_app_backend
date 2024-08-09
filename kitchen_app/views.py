@@ -38,6 +38,15 @@ def fetch_recipes(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
+def random_recipe(request):
+    if request.method == 'GET':
+        recipe = Recipe.random_recipe()
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 @api_view(['POST'])
 @permission_classes((permissions.AllowAny,))
 def filter_recipes_by_name(request):

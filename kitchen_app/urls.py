@@ -10,6 +10,9 @@ urlpatterns = [
     #------------------------------------------------
     #Recipe urls
     path("recipes/", views.fetch_recipes, name="recipes"),
+    
+    path("recipes/random_recipe", views.random_recipe, name="random"),
+
     path("recipe/steps/<int:pk>", views.get_recipe_by_steps, name="get_recipe_by_steps"),
     path("recipes/category/<int:pk>", views.get_recipe_by_category, name="get_recipe_by_category"),
     path("recipes/category_filter", views.get_recipes_by_filter_categorys, name="get_recipes_by_filter_categorys"),

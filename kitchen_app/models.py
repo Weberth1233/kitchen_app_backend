@@ -3,7 +3,7 @@ from django.utils import timezone
 import datetime
 from operator import itemgetter, attrgetter
 from django.core.paginator import Paginator
-
+import random
 class Base(models.Model):
     def pagination(page_number, list):
         paginator = Paginator(list, 2)
@@ -43,6 +43,11 @@ class Recipe(models.Model):
     def was_recipe_recently(self):
         return self.created_at >= timezone.now() - datetime.timedelta(days=1)
     
+    def random_recipe():
+        recipes = Recipe.objects.all().order_by('id')
+        recipe = random.choice(recipes)
+        return recipe
+                         
     def get_image_url(self):
         return self.image.url if self.image else None
 
@@ -50,7 +55,7 @@ class Recipe(models.Model):
         return self.steps.order_by('number_step')
 
     def recently_recipes(**kwargs):
-        recipes =Recipe.objects.get_queryset().order_by('id')
+        recipes =Recipe.objects.all().order_by('id')
         recently_recipes = []
         for recipe in recipes:
             validate = recipe.was_recipe_recently()
@@ -82,7 +87,7 @@ class Recipe(models.Model):
     #get recipes by parameters
 
     def pagination(page_number, list):
-        paginator = Paginator(list, 2)
+        paginator = Paginator(list, 10)
         page_obj = paginator.get_page(page_number)
         return page_obj
 
