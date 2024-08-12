@@ -92,6 +92,15 @@ def get_recipe_by_steps(request, pk):
 
 @api_view(['GET'])
 @permission_classes((permissions.AllowAny,))
+def recipe_detail_by_id(request, pk):
+    if request.method == 'GET':
+        recipe = Recipe.recipe_detail_by_id(id=pk)
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"error_request": "Requisição incorreta - Use o método GET."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@permission_classes((permissions.AllowAny,))
 def get_recipe_by_category(request, pk):
     if request.method == 'GET':
         #Obtendo todos as receitas passando uma determinada categoria

@@ -18,6 +18,8 @@ urlpatterns = [
     path("recipes/category_filter", views.get_recipes_by_filter_categorys, name="get_recipes_by_filter_categorys"),
     path("recipes/recipe_pagination", views.fetch_recipe_pagination, name="fetch_recipe_pagination"),
     path("recipes/filter_name", views.filter_recipes_by_name, name="filter_recipes_by_name"),
+    
+    path("recipes/detail/<int:pk>", views.recipe_detail_by_id, name="recipe_detail_by_id"),
 
     #fetch_recipe_recently_pagination
     path("recipes/recently_recipe_pagination", views.fetch_recently_recipe_pagination, name="fetch_recently_recipe_pagination"),

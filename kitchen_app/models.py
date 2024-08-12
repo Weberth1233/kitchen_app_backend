@@ -62,7 +62,7 @@ class Recipe(models.Model):
             if(validate):
                 recently_recipes.append(recipe)
         return sorted(recently_recipes, key = attrgetter('created_at'))
-        
+    
     def get_recipes_by_category(id_category=None):
         recipes = Recipe.objects.all()
         recipes_by_category = []
@@ -87,12 +87,19 @@ class Recipe(models.Model):
     #get recipes by parameters
 
     def pagination(page_number, list):
-        paginator = Paginator(list, 10)
+        paginator = Paginator(list, 4)
         page_obj = paginator.get_page(page_number)
         return page_obj
 
     #Ordenar por tempo de preparo da comida
-
+    def recipe_detail_by_id(id = None):
+        try:
+            if id is not None:
+                recipe = Recipe.objects.get(pk = id)
+                return recipe
+        except Exception as error: 
+            raise Exception(f'Error! - {error}')
+        
     def filter_recipes_by_name(name=None):
         try:
             if name is not None:
